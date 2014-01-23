@@ -1,0 +1,283 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!-- The HTML 4.01 Transitional DOCTYPE declaration-->
+<!-- above set at the top of the file will set     -->
+<!-- the browser's rendering engine into           -->
+<!-- "Quirks Mode". Replacing this declaration     -->
+<!-- with a "Standards Mode" doctype is supported, -->
+<!-- but may lead to some differences in layout.   -->
+
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <title>Hello App Engine</title>
+    <link id="callCss" rel="stylesheet" href="themes/bootshop/bootstrap.min.css" media="screen"/>
+    <link href="themes/css/base.css" rel="stylesheet" media="screen"/>
+<!-- Bootstrap style responsive -->	
+	<link href="themes/css/bootstrap-responsive.min.css" rel="stylesheet"/>
+	<link href="themes/css/font-awesome.css" rel="stylesheet" type="text/css">
+	<link href="themes/js/google-code-prettify/prettify.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css">
+  <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+  <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+  
+	
+	
+	
+	  <script type="text/javascript">
+      
+   
+   function getToken(){
+      var xhr = new XMLHttpRequest();
+      xhr.open('GET', '/cron/fetchNews', false);
+      xhr.send(null);
+        
+      if (xhr.status == 200) {
+       return(xhr.responseText);
+      }     
+   };
+   
+   function getBook(){
+	      var xhr = new XMLHttpRequest();
+	      xhr.open('GET', '/cron/fetchBooks', false);
+	      xhr.send(null);
+	        
+	      if (xhr.status == 200) {
+	       return(xhr.responseText);
+	      }     
+	   };
+	   
+   
+   function getTitle(){
+	      var xhr = new XMLHttpRequest();
+	      xhr.open('GET', '/cron/retrieve', false);
+	      xhr.send(null);
+	        
+	      if (xhr.status == 200) {
+	       return(xhr.responseText);
+	      }     
+	   };
+	   
+	   function getSearch(){
+		      var xhr = new XMLHttpRequest();
+		      xhr.open('GET', '/cron/Search', false);
+		      xhr.send(null);
+		        
+		      if (xhr.status == 200) {
+		       return(xhr.responseText);
+		      }     
+		   };
+ 
+  
+   
+   function initialize() {
+     var token = getToken();
+     
+    
+     if ( token != null  && token != 'error') {
+        //strip newline from returned token
+         var cleantoken =  token.replace("\n", "", "g");
+      
+      
+        document.getElementById('movieslist').innerHTML = token;
+       // document.getElementById('books').innerHTML = btoken;
+       // alert("after");
+        // onMessage(cleantoken);  
+         //alert(cleantoken);
+       } else {
+         alert('Error fetching token');
+       }
+   };
+   
+   function searchData(){
+	   
+	   var tokenserach = getSearch();
+	   
+	   var val = document.getElementById('srchFld2').value;
+	   alert(val);
+	   if ( token != null  && token != 'error') {
+	        //strip newline from returned token
+	         var cleantoken =  token.replace("\n", "", "g");
+	       	 document.getElementById('movieslist').innerHTML = token;
+	        // alert("after");
+	        // onMessage(cleantoken);  
+	        //alert(cleantoken);
+	       } else {
+	         alert('Error fetching token');
+	       }
+	   };
+	   
+   
+   
+    </script> 
+    <script>
+		$(document).ready(function(){
+			
+			var token3=new Array();
+			token3 = getTitle().split(',');				
+					
+			 $( "#srchFld2" ).autocomplete({
+					      source: token3
+					    });
+			 
+			 
+			
+		});
+		</script> 
+    
+   
+   <script>
+   $(document).ready(function()   {
+       $("#submitButton").click(function()    {
+    	   
+    	   var val = $("#srchFld2").val();
+    	  
+           $.ajax({
+        	    url : "/cron/Search",
+        	    type: "POST",
+        	    data : {"keyword":val},
+        	    success: function(data, textStatus, jqXHR)
+        	    {
+        	    	$('#movieslist').html(data);
+        	    },
+        	    error: function (jqXHR, textStatus, errorThrown)
+        	    {
+        	      alert("error");
+        	    }
+        	}); 
+           
+           return false;
+       });
+       
+       
+   });
+   
+   </script>
+    
+     
+   
+  </head>
+
+   <body onload="initialize();">
+   
+  <div id="header">
+<div class="container">
+<div id="welcomeLine" class="row">
+	<div class="span6">Welcome!<strong> User</strong></div>
+	<div class="span6">
+	
+	
+
+	</div>
+</div>
+
+<!-- Navbar ================================================== -->
+<div id="logoArea" class="navbar">
+<a id="smallScreen" data-target="#topMenu" data-toggle="collapse" class="btn btn-navbar">
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+</a>
+  <div class="navbar-inner">
+    <a class="brand" href="index.html"><font:18px arial,sans-serif;>Amazon Product Listing</font></a>
+    
+  
+		
+    <ul id="topMenu" class="nav pull-right">
+    
+    <form class="form-inline navbar-search" method="post"  >
+		<input id="srchFld2" class="srchTxt" type="text" name="data" />
+		  <button type="submit" id="submitButton" class="btn btn-primary" >Go</button>
+    </form>	
+    </ul>
+     </div>
+  </div>
+</div>
+</div>
+</div>
+<div id="mainBody">
+	<div class="container">
+    <div id="mainBody">
+	<div class="container">
+	<div class="row">
+<!-- Sidebar ================================================== -->
+	<div id="sidebar" class="span3">
+		
+		<ul id="sideManu" class="nav nav-tabs nav-stacked">
+			<li class="subMenu open"><a>Products</a>
+				<!--  
+				<li><a class="active" href="products.html"><i class="icon-chevron-right"></i>Books</a></li>
+				<li><a href="products.html"><i class="icon-chevron-right"></i>Movies</a></li>
+				<li><a href="products.html"><i class="icon-chevron-right"></i>Mobile Phone (80)</a></li>
+				<li><a href="products.html"><i class="icon-chevron-right"></i>Sound & Vision (15)</a></li>
+				</ul>--><ul>
+			</li>
+			
+			
+		<br/>
+		  <div class="thumbnail">
+			<img src="themes/images/products/panasonic.jpg" alt="Bootshop panasonoc New camera"/>
+			<div class="caption">
+			  <h5>Panasonic</h5>
+				
+			</div>
+		  </div><br/>
+			<div class="thumbnail">
+				<img src="themes/images/products/kindle.png" title="Bootshop New Kindel" alt="Bootshop Kindel">
+				<div class="caption">
+				  <h5>Kindle</h5>
+				   
+				</div>
+			  </div><br/>
+			<div class="thumbnail">
+				<img src="themes/images/payment_methods.png" title="Bootshop Payment Methods" alt="Payments Methods">
+				<div class="caption">
+				  <h5>Payment Methods</h5>
+				</div>
+			  </div>
+	</div>
+	
+		<div class="span9">
+    <ul class="breadcrumb">
+		<li><a href="index.html">Home</a> <span class="divider">/</span></li>
+		<li class="active">Products Name</li>
+    </ul>
+	
+	<hr class="soft"/>
+	
+	<hr class="soft"/>
+	
+	  
+<div id="myTab" class="pull-right">
+ <a href="#listView" data-toggle="tab"><span class="btn btn-large btn-primary"><i class="icon-list"></i></span></a>
+ <a href="#blockView" data-toggle="tab"><span class="btn btn-large "><i class="icon-th-large"></i></span></a>
+</div>
+<br class="clr"/>
+<div class="tab-content">
+
+	<div class="tab-pane  active" id="listView">
+	<div id="movieslist">Waiting for headlines stream...</div>	
+	</div>
+
+	<div class="tab-pane " id="blockView">
+		<ul class="thumbnails">
+			<li class="span3">
+			<div id="books">Waiting for headlines stream...</div>	 
+			</li>
+		  </ul>
+	<hr class="soft"/>
+	</div>
+</div>
+
+	
+			<br class="clr"/>
+</div>
+</div>
+</div>
+</div>
+   </div>
+	</div>
+    
+   <hr/>
+   
+  </body>
+</html>
